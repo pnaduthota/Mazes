@@ -57,7 +57,7 @@ class Maze
 
     # for each row...
     @height.times do |y|
-      # print the left hand side
+      # print the left hand side of the row
       print "|"
 
       # for each column in the row...
@@ -73,6 +73,7 @@ class Maze
         # if the coordinate can go east, and the [y][x+1] can go south,
         # print " ". Otherwise, print " ".
         # print '|' if the coordinate can't go east.
+        # print '|' if the coordinate is on the right side of the wall
         if @grid[y][x] & E != 0
           print(((@grid[y][x] || @grid[y][x+1]) & S != 0) ? " " : "_")
         else
@@ -86,8 +87,13 @@ class Maze
 
   # solve maze
   def solve(begx, begy, endx, endy)
+    # create the coordinate as a string
+    # so you can add it to the array
+    coor = "[#{begy}, #{begx}]"
+
     # if the coordinates are off the grid, return false
     if begx > @width-1 || begy > @height-1 || begx < 0 || begy < 0
+      @trace.delete(coor)
       return false
     end
 
@@ -95,19 +101,20 @@ class Maze
     # the recursive tracing
     # return true
     if begx == endx && begy == endy
+      @trace.push(coor)
       return true
     end
 
     # if the coordinate is a wall or dead end, then return false
     if @grid[begy][begx] == 0
+      @trace.delete(coor)
       return false
     end
-
-    coor = "[#{begy}, #{begx}]"
 
     # if the coordinate has already been visited, stop recursion
     # otherwise, add to the solution path
     if @solution_path.include? coor
+      @trace.delete(coor)
       return false
     else
       @solution_path.push(coor)
@@ -149,6 +156,7 @@ class Maze
     @solution_path.delete(coor)
 
     # return false if there is no solution
+    @trace.delete(coor)
     return false
   end
 
