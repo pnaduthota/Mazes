@@ -163,9 +163,15 @@ class Maze
     carve_maze(0, 0, @grid)
   end
 
+  puts "Initalize a new test maze, 8x8."
   test = Maze.new
+  puts "Display the test maze."
   test.display
+  puts "Test to see if there is a solution from (0,0) to (3,5)"
   puts test.solve(0, 0, 3, 5)
+  puts "Print the soltion path. [] if no solution."
   test.trace
+  puts "Redesign the maze. Reprint a new maze."
   test.redesign
+  test.display
 end
